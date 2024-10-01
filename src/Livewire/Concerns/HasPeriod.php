@@ -9,23 +9,34 @@ trait HasPeriod
 {
     /**
      * The usage period.
-     *
-     * @var '1_hour'|'6_hours'|'24_hours'|'7_days'|null
      */
     #[Url]
-    public ?string $period = '1_hour';
+    public ?string $period = '1h';
+
+    /**
+     * The default periods.
+     */
+    public array $defaults = [
+        '1h' => 1,
+        '6h' => 6,
+        '24h' => 24,
+        '7d' => 168,
+    ];
+
+    /**
+     * The available periods.
+     */
+    public function periods(): array
+    {
+        return config('pulse.periods', $this->defaults);
+    }
 
     /**
      * The period as an Interval instance.
      */
     public function periodAsInterval(): CarbonInterval
     {
-        return CarbonInterval::hours(match ($this->period) {
-            '6_hours' => 6,
-            '24_hours' => 24,
-            '7_days' => 168,
-            default => 1,
-        });
+        return CarbonInterval::hours($this->periods()[$this->period] ?? 1);
     }
 
     /**
@@ -33,11 +44,11 @@ trait HasPeriod
      */
     public function periodForHumans(): string
     {
-        return match ($this->period) {
-            '6_hours' => '6 hours',
-            '24_hours' => '24 hours',
-            '7_days' => '7 days',
-            default => 'hour',
-        };
+        return collect($this->periods())
+            ->map(fn (int $hours, string $key): array => [
+                'key' => $key,
+                'label' => $hours,
+            ])
+            ->firstWhere('key', '=', $this->period)['label'] ?? '1h';
     }
 }

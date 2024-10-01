@@ -123,6 +123,24 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Pulse Periods
+    |--------------------------------------------------------------------------
+    |
+    | The following array lists the "periods" that will be available to select
+    | from the Pulse dashboard. You may modify this array as you wish, but
+    | ensure that the key is the period and the value is the hours.
+    |
+    */
+
+    'periods' => [
+        '1h' => 1,
+        '6h' => 6,
+        '24h' => 24,
+        '7d' => 168,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Pulse Recorders
     |--------------------------------------------------------------------------
     |
