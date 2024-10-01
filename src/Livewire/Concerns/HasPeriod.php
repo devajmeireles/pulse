@@ -15,6 +15,8 @@ trait HasPeriod
 
     /**
      * The default periods.
+     *
+     * @var array<string, int>
      */
     public array $defaults = [
         '1h' => 1,
@@ -25,6 +27,8 @@ trait HasPeriod
 
     /**
      * The available periods.
+     *
+     * @return array<string, int>
      */
     public function periods(): array
     {
@@ -47,7 +51,7 @@ trait HasPeriod
         return collect($this->periods())
             ->map(fn (int $hours, string $key): array => [
                 'key' => $key,
-                'label' => $hours,
+                'label' => (string) $hours,
             ])
             ->firstWhere('key', '=', $this->period)['label'] ?? '1h';
     }
